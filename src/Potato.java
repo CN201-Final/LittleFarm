@@ -1,7 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Set;
 
 public class Potato extends Crop {
+    public Potato() {
+        super(Set.of(Season.HOT, Season.RAINY));
+    }
+
     @Override public String getName() { return "Potato"; }
     @Override public int getDaysToMature() { return 5; }
     @Override public int getSeedPrice() { return 50; }

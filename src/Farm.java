@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.Random;
 
 public class Farm {
     public static final int TILE = 32;   // pixels
@@ -78,14 +79,16 @@ public class Farm {
         return count;
     }
 
-    /** Crops grow overnight, then the new day's weather may water everything. */
-    public void newDay(Weather weather) {
+    /** Advances each plot to the new day and returns the number of crops lost to the storm. */
+    public int newDay(Season season, Weather weather, Random rng) {
+        int stormLosses = 0;
         for (Tile[] line : tiles) {
             for (Tile tile : line) {
-                tile.newDay();
+                if (tile.newDay(season, weather, rng)) stormLosses++;
                 if (weather.watersCrops()) tile.soak();
             }
         }
+        return stormLosses;
     }
 
     // ---- drawing --------------------------------------------------------------

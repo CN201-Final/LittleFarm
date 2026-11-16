@@ -1,5 +1,9 @@
+import java.util.Random;
+
 /** One square of the farm. It guards its own rules: you cannot plant on grass or water a fence. */
 public class Tile {
+    private static final int STORM_DAMAGE_PERCENT = 20;
+
     private TileType type;
     private boolean watered;
     private Crop crop;
@@ -44,9 +48,16 @@ public class Tile {
         return name;
     }
 
-    /** Overnight: a crop grows only if it was watered today. Then the soil dries out. */
-    public void newDay() {
+    /** Grows watered crops overnight. Returns true if the new day's storm destroyed a crop. */
+    public boolean newDay(Season season, Weather weather, Random rng) {
         if (crop != null && watered) crop.grow();
         watered = false;
+
+        if (crop != null && !crop.canGrowIn(season)) crop = null;
+        if (crop != null && weather == Weather.STORM && rng.nextInt(100) < STORM_DAMAGE_PERCENT) {
+            crop = null;
+            return true;
+        }
+        return false;
     }
 }

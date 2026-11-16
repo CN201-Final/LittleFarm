@@ -1,9 +1,14 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Set;
 
 /** Slow to start, but after the first picking it fruits again every two days. */
 public class Strawberry extends Crop {
     private static final int REGROW_DAYS = 2;
+
+    public Strawberry() {
+        super(Set.of(Season.RAINY, Season.COLD));
+    }
 
     @Override public String getName() { return "Strawberry"; }
     @Override public int getDaysToMature() { return 6; }

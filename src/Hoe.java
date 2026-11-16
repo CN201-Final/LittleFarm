@@ -4,7 +4,7 @@ public class Hoe implements Tool {
     @Override public int getEnergyCost() { return 4; }
 
     @Override
-    public void use(Tile tile) throws FarmException {
+    public void use(Tile tile, Season season) throws FarmException {
         tile.till();
     }
 }
