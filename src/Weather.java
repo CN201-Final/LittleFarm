@@ -5,7 +5,8 @@ import java.util.Random;
 /** Each kind of weather carries its own odds and effects, so adding a STORM means adding one constant. */
 public enum Weather {
     SUNNY("Sunny", "A fine sunny day", 75, false),
-    RAINY("Rain", "Rain today - no need to water", 25, true);
+    RAINY("Rainy", "Rain today - no need to water", 25, true),
+    STORM("Storm", "STORM WARNING: Heavy rain and wind!", 0, true);
 
     private final String label;
     private final String morningText;
@@ -23,9 +24,18 @@ public enum Weather {
     public String getMorningText() { return morningText; }
     public boolean watersCrops() { return watersCrops; }
 
+    /** Keeps compatibility with existing calls without a season. */
     public static Weather forecast(Random rng) {
+        return forecast(rng, Season.HOT);
+    }
+
+    /** Rolls storm chance from the current season first, then sunny/rainy. */
+    public static Weather forecast(Random rng, Season season) {
+        if (season != null && rng.nextInt(100) < season.getStormChance()) {
+            return STORM;
+        }
         int roll = rng.nextInt(100);
-        for (Weather weather : values()) {
+        for (Weather weather : new Weather[] {SUNNY, RAINY}) {
             if (roll < weather.chance) return weather;
             roll -= weather.chance;
         }
