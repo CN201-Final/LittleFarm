@@ -50,10 +50,18 @@ public class Tile {
 
     /** Grows watered crops overnight. Returns true if the new day's storm destroyed a crop. */
     public boolean newDay(Season season, Weather weather, Random rng) {
-        if (crop != null && watered) crop.grow();
+        if (crop != null && watered) {
+            if (crop.canGrowIn(season)){
+                crop.grow();
+            } else {
+                if (rng.nextBoolean()){
+                    crop.grow();
+                }
+            }
+        } 
+        
         watered = false;
 
-        if (crop != null && !crop.canGrowIn(season)) crop = null;
         if (crop != null && weather == Weather.STORM && rng.nextInt(100) < STORM_DAMAGE_PERCENT) {
             crop = null;
             return true;

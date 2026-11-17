@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-/** Weather odds for the starter game's daily forecast. */
+/** Each kind of weather carries its own odds and effects, so adding a STORM means adding one constant. */
 public enum Weather {
     SUNNY("Sunny", "A fine sunny day", 15, false),
     RAINY("Rainy", "Rain today - no need to water", 85, true),
@@ -10,15 +10,13 @@ public enum Weather {
 
     private final String label;
     private final String morningText;
-    private final int otherSeasonChance;
-    private final int rainySeasonChance;
+    private final int chance;            
     private final boolean watersCrops;
 
-    Weather(String label, String morningText, int otherSeasonChance, int rainySeasonChance, boolean watersCrops) {
+    Weather(String label, String morningText, int chance, boolean watersCrops) {
         this.label = label;
         this.morningText = morningText;
-        this.otherSeasonChance = otherSeasonChance;
-        this.rainySeasonChance = rainySeasonChance;
+        this.chance = chance;
         this.watersCrops = watersCrops;
     }
 
@@ -28,7 +26,7 @@ public enum Weather {
     public int getChance() { return chance; }
 
     /** Rolls storm chance from the current season first, then sunny/rainy. */
-public static Weather forecast(Random rng, Season season) {
+    public static Weather forecast(Random rng, Season season) {
         int roll = rng.nextInt(100);
         if (season == Season.HOT) {
             if (roll < 15) return RAINY;
@@ -55,7 +53,6 @@ public static Weather forecast(Random rng, Season season) {
                                x + 10 + (int) (10 * Math.cos(a)), y + 10 + (int) (10 * Math.sin(a)));
                 }
                 break;
-            case STORM:
             case RAINY:
                 g.setColor(new Color(190, 200, 215));
                 g.fillOval(x, y + 4, 12, 10);
