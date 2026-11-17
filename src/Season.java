@@ -1,25 +1,15 @@
 public enum Season {
-    HOT("Hot", "The heat drains your energy as you work."),
-    RAINY("Rainy", "A storm threatens to ruin your crops."),
-    COLD("Cold", "It's freezing! Good thing strawberries love the cold.");
+    HOT(0),   
+    RAINY(35),   
+    COLD(0);     
 
-    private final String label;
-    private final String description;
+    private final int stormChance;
 
-    Season(String label, String description) {
-        this.label = label;
-        this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public String getDescription() {
-        return  description;
+    Season(int stormChance) {
+        this.stormChance = stormChance;
     }
 
     public int getStormChance() {
-        return this == RAINY ? 50 : 10;
+        return stormChance;
     }
 }
