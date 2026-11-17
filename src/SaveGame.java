@@ -10,6 +10,7 @@ import java.util.Map;
  * Saves the farm as plain text you can open and read, e.g.
  *   day 4
  *   weather RAINY
+ *   season HOT
  *   gold 380
  *   seeds Turnip 2
  *   request Turnip 3 360 4     (crop amount reward daysLeft)
@@ -51,6 +52,7 @@ public class SaveGame {
             out.println(HEADER);
             out.println("day " + clock.getDay());
             out.println("weather " + clock.getWeather().name());
+            out.println("season " + clock.getSeason().name());
             out.println("gold " + farmer.getGold());
             out.println("earned " + farmer.getTotalEarned());
             out.println("can " + farmer.getCan().getWater());
@@ -88,6 +90,7 @@ public class SaveGame {
                 switch (parts[0]) {
                     case "day":     clock.setDay(Integer.parseInt(parts[1])); break;
                     case "weather": clock.setWeather(Weather.valueOf(parts[1])); break;
+                    case "season": clock.setSeason(Season.valueOf(parts[1])); break;
                     case "gold":    farmer.setGold(Integer.parseInt(parts[1])); break;
                     case "earned":  farmer.setTotalEarned(Integer.parseInt(parts[1])); break;
                     case "villager":

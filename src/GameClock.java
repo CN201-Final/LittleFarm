@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /** Days run from 06:00 to midnight; the clock moves on ten minutes every two real seconds. */
@@ -7,6 +10,7 @@ public class GameClock {
     private static final int DUSK = 18 * 60;
     private static final int TICKS_PER_STEP = 120;
     private static final int MINUTES_PER_STEP = 10;
+    private static final int FORECAST_DAYS = 3;
 
     private int day = 1;
     private int minutes = DAY_START;
@@ -40,6 +44,7 @@ public class GameClock {
     public void setDay(int day) {
         if (day < 1) throw new IllegalArgumentException("day must be at least 1, not " + day);
         this.day = day;
+        this.season = seasonForDay(day);
     }
 
     /** How dark the evening is: 0 until 18:00, rising to 160 by 22:00. */
