@@ -16,7 +16,7 @@ public class SeedBag implements Tool {
         if (seeds == 0) throw new FarmException("No " + cropName + " seeds left - buy some at the shop");
         Crop crop = CropFactory.create(cropName);
         if (!crop.canGrowIn(season)) {
-            throw new WrongSeasonException("Cannot plant " + cropName + " during " + season);
+            throw new WrongSeasonException("Cannot plant " + cropName + " during " + season.getName());
         }
         tile.plant(crop);
         seeds--;

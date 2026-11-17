@@ -25,22 +25,6 @@ public enum Weather {
     public boolean watersCrops() { return watersCrops; }
     public int getChance() { return chance; }
 
-    /** Rolls storm chance from the current season first, then sunny/rainy. */
-    public static Weather forecast(Random rng, Season season) {
-        int roll = rng.nextInt(100);
-        if (season == Season.HOT) {
-            if (roll < 15) return RAINY;
-            return SUNNY; 
-        } else if (season == Season.RAINY) {
-            if (roll < 35) return STORM; 
-            if (roll < 85) return RAINY; 
-            return SUNNY;                
-        } else { 
-            if (roll < 30) return RAINY;
-            return SUNNY;
-        }
-    }
-
     /** A small icon about 20 pixels across, with (x, y) its top-left corner. */
     public void drawIcon(Graphics2D g, int x, int y) {
         switch (this) {

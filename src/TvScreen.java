@@ -31,7 +31,7 @@ public class TvScreen implements Screen {
         Ui.paper(g, left, top, width, height);
         Ui.centered(g, "WEATHER FORECAST", 26, top + 45, Ui.INK);
 
-        String seasonName = clock.getSeason().name();
+        String seasonName = clock.getSeason().getName();
         Ui.centered(g, "SEASON: " + seasonName, 16, top + 75, new Color(40, 130, 50));
         
         g.setColor(new Color(200, 180, 150));

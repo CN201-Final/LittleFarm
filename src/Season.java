@@ -1,15 +1,16 @@
-public enum Season {
-    HOT(0),   
-    RAINY(35),   
-    COLD(0);     
+import java.util.Random;
 
-    private final int stormChance;
+public abstract class Season {
+    public static final Season HOT = new HotSeason();
+    public static final Season RAINY = new RainySeason();
+    public static final Season COLD = new ColdSeason();
 
-    Season(int stormChance) {
-        this.stormChance = stormChance;
-    }
+    public static final Season[] VALUES = { HOT, RAINY, COLD };
 
-    public int getStormChance() {
-        return stormChance;
-    }
+    public abstract String getName();
+
+    public abstract int getToolSurcharge();
+
+    public abstract Weather forecastWeather(Random rng);
+
 }

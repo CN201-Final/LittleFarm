@@ -74,10 +74,10 @@ public class ShopScreen implements Screen {
             }
             
             StringBuilder seasonsStr = new StringBuilder();
-            for (Season s : Season.values()) {
+            for (Season s : Season.VALUES) {
                 if (crop.canGrowIn(s)) {
                     if (seasonsStr.length() > 0) seasonsStr.append(", ");
-                    seasonsStr.append(s.name());
+                    seasonsStr.append(s.getName());
                 }
             }
             

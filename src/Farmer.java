@@ -74,8 +74,8 @@ public class Farmer {
 
     public void use(Tool tool, Tile tile, Season season) throws FarmException {
         int cost = tool.getEnergyCost();
-        if (season == Season.HOT) cost += HOT_TOOL_SURCHARGE;
-        if (energy < cost) throw new FarmException("Too tired - go to bed in the house");
+        cost += season.getToolSurcharge();
+        if (energy < cost) throw new ExhaustedFarmerException("Too tired - go to bed in the house");
         tool.use(tile, season);
         energy -= cost;
     }
