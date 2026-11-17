@@ -36,7 +36,7 @@ public class GameClock {
         ticks = 0;
         forecast[0] = forecast[1];
         forecast[1] = forecast[2];
-        forecast[2] = Weather.forecast(rng, getSeason());
+        forecast[2] = getSeason().forecastWeather(rng);
     }
 
     public int getDay() {
@@ -67,7 +67,7 @@ public class GameClock {
 
     public Season getSeason() {
         int idx = ((day - 1) / 10) % 3;
-        return Season.values()[idx];
+        return Season.VALUES[idx];
     }
 
     /** How dark the evening is: 0 until 18:00, rising to 160 by 22:00. */
