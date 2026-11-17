@@ -9,12 +9,12 @@ import java.util.Random;
 
 /** The farm itself: walking, farming, talking, and ending each day. */
 public class FarmScreen implements Screen {
-    public static final int GOAL_GOLD = 5000;   // grandpa's debt
+    public static final int GOAL_GOLD = 5000; // grandpa's debt
     public static final int LAST_DAY = 30;
-    private static final int DOOR_COL = 2, DOOR_ROW = 4;   // where the farmer wakes up
+    private static final int DOOR_COL = 2, DOOR_ROW = 4; // where the farmer wakes up
     private static final int STARTING_GOLD = 300;
     private static final int STARTING_SEEDS = 5;
-    private static final int LATE = 22 * 60;    // time of the "go to bed" warning, in minutes
+    private static final int LATE = 22 * 60; // time of the "go to bed" warning, in minutes
     private static final int FADE_TICKS = 70;
     private static final int MESSAGE_TICKS = 220;
 
@@ -23,9 +23,9 @@ public class FarmScreen implements Screen {
     private final Farm farm = new Farm();
     private final Farmer farmer = new Farmer(DOOR_COL, DOOR_ROW, STARTING_GOLD);
     private final GameClock clock = new GameClock();
-    private final Bag<String> shippedToday = new Bag<>();   // paid out when the farmer sleeps
+    private final Bag<String> shippedToday = new Bag<>(); // paid out when the farmer sleeps
     private final List<FloatingText> floatingTexts = new ArrayList<>();
-    private Checklist checklist;                           // only on the first day of a new game
+    private Checklist checklist; // only on the first day of a new game
     private int fadeTicks, messageTicks;
     private boolean warnedLate;
     private String message = "";
@@ -63,10 +63,21 @@ public class FarmScreen implements Screen {
         game.setScreen(this);
     }
 
-    public Farm getFarm() { return farm; }
-    public Farmer getFarmer() { return farmer; }
-    public GameClock getClock() { return clock; }
-    public boolean isMonthOver() { return clock.getDay() > LAST_DAY; }
+    public Farm getFarm() {
+        return farm;
+    }
+
+    public Farmer getFarmer() {
+        return farmer;
+    }
+
+    public GameClock getClock() {
+        return clock;
+    }
+
+    public boolean isMonthOver() {
+        return clock.getDay() > LAST_DAY;
+    }
 
     public void say(String text) {
         message = text;
@@ -86,15 +97,24 @@ public class FarmScreen implements Screen {
 
     @Override
     public void keyPressed(int code) {
-        if (fadeTicks > 0) return;
-        if (code == KeyEvent.VK_ESCAPE || code == KeyEvent.VK_P) game.setScreen(new PauseScreen(game, this));
-        else if (code == KeyEvent.VK_SPACE) doAction();
-        else if (code == KeyEvent.VK_Q) farmer.cycleSeed(-1);
-        else if (code == KeyEvent.VK_E) farmer.cycleSeed(1);
-        else if (code >= KeyEvent.VK_1 && code <= KeyEvent.VK_9) farmer.selectSeed(code - KeyEvent.VK_1);
+        if (fadeTicks > 0)
+            return;
+        if (code == KeyEvent.VK_ESCAPE || code == KeyEvent.VK_P)
+            game.setScreen(new PauseScreen(game, this));
+        else if (code == KeyEvent.VK_SPACE)
+            doAction();
+        else if (code == KeyEvent.VK_Q)
+            farmer.cycleSeed(-1);
+        else if (code == KeyEvent.VK_E)
+            farmer.cycleSeed(1);
+        else if (code >= KeyEvent.VK_1 && code <= KeyEvent.VK_9)
+            farmer.selectSeed(code - KeyEvent.VK_1);
     }
 
-    /** What SPACE does depends only on what the farmer is facing; hint() describes the same choice. */
+    /**
+     * What SPACE does depends only on what the farmer is facing; hint() describes
+     * the same choice.
+     */
     private void doAction() {
         int col = farmer.facingCol(), row = farmer.facingRow();
         Villager villager = farm.villagerAt(col, row);
@@ -103,7 +123,8 @@ public class FarmScreen implements Screen {
             return;
         }
         Tile tile = farm.tileAt(col, row);
-        if (tile == null) return;
+        if (tile == null)
+            return;
         try {
             switch (tile.getType()) {
                 case HOUSE:
@@ -133,30 +154,45 @@ public class FarmScreen implements Screen {
                 return;
             }
             Tool tool = farmer.toolFor(tile);
-            if (tool == null) throw new FarmException(tile.hasCrop() ? "Already watered - it grows tonight" : "Nothing to do here");
+            if (tool == null)
+                throw new FarmException(tile.hasCrop() ? "Already watered - it grows tonight" : "Nothing to do here");
             farmer.use(tool, tile, clock.getSeason());
-            if (checklist != null && tool instanceof SeedBag) checklist.complete(Checklist.Step.PLANT);
-            if (checklist != null && tool instanceof WateringCan) checklist.complete(Checklist.Step.WATER);
+            if (checklist != null && tool instanceof SeedBag)
+                checklist.complete(Checklist.Step.PLANT);
+            if (checklist != null && tool instanceof WateringCan)
+                checklist.complete(Checklist.Step.WATER);
         } catch (FarmException e) {
             say(e.getMessage());
         }
     }
 
-    /** The label shown next to the highlighted tile, or null if SPACE would do nothing there. */
+    /**
+     * The label shown next to the highlighted tile, or null if SPACE would do
+     * nothing there.
+     */
     String hint() {
         int col = farmer.facingCol(), row = farmer.facingRow();
-        if (farm.villagerAt(col, row) != null) return "Talk";
+        if (farm.villagerAt(col, row) != null)
+            return "Talk";
         Tile tile = farm.tileAt(col, row);
-        if (tile == null) return null;
+        if (tile == null)
+            return null;
         switch (tile.getType()) {
-            case HOUSE: return "Sleep";
-            case SHOP:  return "Shop";
-            case BIN:   return "Ship basket";
-            case POND:  return "Refill can";
-            case TV:    return "Watch Forecast";
-            default:    break;
+            case HOUSE:
+                return "Sleep";
+            case SHOP:
+                return "Shop";
+            case BIN:
+                return "Ship basket";
+            case POND:
+                return "Refill can";
+            case TV:
+                return "Watch Forecast";
+            default:
+                break;
         }
-        if (tile.hasCrop() && tile.getCrop().isMature()) return "Harvest";
+        if (tile.hasCrop() && tile.getCrop().isMature())
+            return "Harvest";
         Tool tool = farmer.toolFor(tile);
         return tool == null ? null : tool.getActionName();
     }
@@ -165,16 +201,26 @@ public class FarmScreen implements Screen {
         int before = farmer.getGold();
         say(villager.talk(farmer));
         int reward = farmer.getGold() - before;
-        if (reward > 0) floatAt(villager.getCol(), villager.getRow(), "+" + reward + "G", Ui.HIGHLIGHT);
-        if (checklist != null) checklist.complete(Checklist.Step.TALK);
+        if (reward > 0)
+            floatAt(villager.getCol(), villager.getRow(), "+" + reward + "G", Ui.HIGHLIGHT);
+        if (checklist != null)
+            checklist.complete(Checklist.Step.TALK);
     }
 
     private void ship() throws FarmException {
         Bag<String> basket = farmer.getBasket();
-        if (basket.isEmpty()) throw new FarmException("Nothing to ship - harvest something first");
+        if (basket.isEmpty())
+            throw new FarmException("Nothing to ship - harvest something first");
         int value = 0;
+        Season currentSeason = clock.getSeason();
+
         for (Map.Entry<String, Integer> entry : basket.asMap().entrySet()) {
-            value += CropFactory.create(entry.getKey()).getSellPrice() * entry.getValue();
+            Crop crop = CropFactory.create(entry.getKey());
+            int price = crop.getSellPrice();
+            if (crop.canGrowIn(currentSeason)) {
+                price = (int) (price * 1.2); 
+            }
+            value += price * entry.getValue();
             shippedToday.add(entry.getKey(), entry.getValue());
         }
         basket.clear();
@@ -191,17 +237,30 @@ public class FarmScreen implements Screen {
                 "Sleep", "Not yet", thirsty > 0, () -> sleep(false)));
     }
 
-    /** Ends the day: pays for what was shipped, grows the crops, saves, and shows the summary. */
+    /**
+     * Ends the day: pays for what was shipped, grows the crops, saves, and shows
+     * the summary.
+     */
     private void sleep(boolean passedOut) {
         List<String> lines = new ArrayList<>();
-        if (passedOut) lines.add("You passed out at midnight! Half energy today.");
+        if (passedOut)
+            lines.add("You passed out at midnight! Half energy today.");
         int earned = 0;
+        Season currentSeason = clock.getSeason();
+
         for (Map.Entry<String, Integer> entry : shippedToday.asMap().entrySet()) {
-            int value = CropFactory.create(entry.getKey()).getSellPrice() * entry.getValue();
+            Crop crop = CropFactory.create(entry.getKey());
+            int price = crop.getSellPrice();
+            if (crop.canGrowIn(currentSeason)) {
+                price = (int) (price * 1.2); 
+            }
+            int value = price * entry.getValue();
+
             lines.add(String.format("Shipped %-10s x%-3d %6dG", entry.getKey(), entry.getValue(), value));
             earned += value;
         }
-        if (shippedToday.isEmpty()) lines.add("Nothing was shipped today.");
+        if (shippedToday.isEmpty())
+            lines.add("Nothing was shipped today.");
         shippedToday.clear();
 
         int goldBefore = farmer.getGold();
@@ -209,17 +268,21 @@ public class FarmScreen implements Screen {
         clock.nextDay(rng);
         Weather weather = clock.getWeather();
         int stormLosses = farm.newDay(clock.getSeason(), weather, rng);
-        if (weather == Weather.STORM) lines.add("Crops lost to the storm: " + stormLosses);
+        if (weather == Weather.STORM)
+            lines.add("Crops lost to the storm: " + stormLosses);
         String news = farm.getVillager().newDay(clock.getDay(), rng);
-        if (news != null) lines.add(news);
+        if (news != null)
+            lines.add(news);
         farmer.wakeUp(DOOR_COL, DOOR_ROW, passedOut);
         floatingTexts.clear();
         messageTicks = 0;
-        checklist = null;   // the first day is over
+        checklist = null; // the first day is over
 
         try {
-            if (isMonthOver()) game.getSaveGame().delete();   // the story is over
-            else game.getSaveGame().save(farm, farmer, clock);
+            if (isMonthOver())
+                game.getSaveGame().delete(); // the story is over
+            else
+                game.getSaveGame().save(farm, farmer, clock);
         } catch (IOException e) {
             lines.add("Couldn't save: " + e.getMessage());
         }
@@ -234,8 +297,10 @@ public class FarmScreen implements Screen {
             fadeTicks--;
             return;
         }
-        if (messageTicks > 0) messageTicks--;
-        for (FloatingText text : floatingTexts) text.update();
+        if (messageTicks > 0)
+            messageTicks--;
+        for (FloatingText text : floatingTexts)
+            text.update();
         floatingTexts.removeIf(FloatingText::isDone);
 
         clock.tick();
@@ -248,16 +313,20 @@ public class FarmScreen implements Screen {
             say("It's getting late - go to bed before midnight!");
         }
         farmer.update(farm, heldDirection());
-        if (clock.getWeather() == Weather.STORM && rng.nextInt(500) == 0){
+        if (clock.getWeather() == Weather.STORM && rng.nextInt(500) == 0) {
             lightningTicks = 10;
         }
     }
 
     private Direction heldDirection() {
-        if (game.isHeld(KeyEvent.VK_UP, KeyEvent.VK_W)) return Direction.UP;
-        if (game.isHeld(KeyEvent.VK_DOWN, KeyEvent.VK_S)) return Direction.DOWN;
-        if (game.isHeld(KeyEvent.VK_LEFT, KeyEvent.VK_A)) return Direction.LEFT;
-        if (game.isHeld(KeyEvent.VK_RIGHT, KeyEvent.VK_D)) return Direction.RIGHT;
+        if (game.isHeld(KeyEvent.VK_UP, KeyEvent.VK_W))
+            return Direction.UP;
+        if (game.isHeld(KeyEvent.VK_DOWN, KeyEvent.VK_S))
+            return Direction.DOWN;
+        if (game.isHeld(KeyEvent.VK_LEFT, KeyEvent.VK_A))
+            return Direction.LEFT;
+        if (game.isHeld(KeyEvent.VK_RIGHT, KeyEvent.VK_D))
+            return Direction.RIGHT;
         return null;
     }
 
@@ -267,50 +336,60 @@ public class FarmScreen implements Screen {
     public void draw(Graphics2D g) {
         farm.draw(g);
         int col = farmer.facingCol(), row = farmer.facingRow();
-        g.setColor(new Color(255, 255, 255, 110));   // the tile SPACE will act on
+        g.setColor(new Color(255, 255, 255, 110)); // the tile SPACE will act on
         g.drawRect(col * Farm.TILE, row * Farm.TILE, Farm.TILE - 1, Farm.TILE - 1);
         drawPeople(g);
         if (clock.getSeason() == Season.COLD) {
-            g.setColor(new Color(100, 150, 255, 35)); 
+            g.setColor(new Color(100, 150, 255, 35));
             g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
         }
         if (clock.getWeather() == Weather.RAINY || clock.getWeather() == Weather.STORM) {
             drawRain(g, clock.getWeather() == Weather.STORM);
         }
         if (lightningTicks > 0) {
-            g.setColor(new Color(255, 255, 255, lightningTicks * 21)); 
+            g.setColor(new Color(255, 255, 255, lightningTicks * 21));
             g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
             lightningTicks--;
         }
         g.setColor(new Color(15, 15, 50, clock.darkness()));
         g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
-        for (FloatingText text : floatingTexts) text.draw(g);
+        for (FloatingText text : floatingTexts)
+            text.draw(g);
         drawHint(g, col, row);
 
         Hud.draw(g, farmer, clock, farm.getVillager());
-        if (checklist != null) checklist.draw(g, 195, 36);
-        if (messageTicks > 0) drawMessage(g);
-        if (fadeTicks > 0) drawDayStart(g);
+        if (checklist != null)
+            checklist.draw(g, 195, 36);
+        if (messageTicks > 0)
+            drawMessage(g);
+        if (fadeTicks > 0)
+            drawDayStart(g);
     }
 
-    /** Whoever stands lower on the screen is drawn last, so they appear in front. */
+    /**
+     * Whoever stands lower on the screen is drawn last, so they appear in front.
+     */
     private void drawPeople(Graphics2D g) {
         Villager villager = farm.getVillager();
         boolean villagerBehind = villager.getRow() <= farmer.getRow();
-        if (villagerBehind) villager.draw(g, game.getFrames());
+        if (villagerBehind)
+            villager.draw(g, game.getFrames());
         farmer.draw(g);
-        if (!villagerBehind) villager.draw(g, game.getFrames());
+        if (!villagerBehind)
+            villager.draw(g, game.getFrames());
     }
 
-    /** A small "SPACE  Water" tag beside the highlighted tile. */
+    /** A small "SPACE Water" tag beside the highlighted tile. */
     private void drawHint(Graphics2D g, int col, int row) {
         String hint = hint();
-        if (hint == null) return;
+        if (hint == null)
+            return;
         String text = "SPACE  " + hint;
         g.setFont(Ui.font(12));
         int width = g.getFontMetrics().stringWidth(text) + 12;
         int x = col * Farm.TILE + Farm.TILE / 2 - width / 2;
-        // above the tile, unless the farmer is standing there (facing down) or it would leave the screen
+        // above the tile, unless the farmer is standing there (facing down) or it would
+        // leave the screen
         int y = farmer.getFacing() == Direction.DOWN || row == 0 ? (row + 1) * Farm.TILE + 2 : row * Farm.TILE - 20;
         x = Math.max(2, Math.min(Ui.WIDTH - width - 2, x));
         g.setColor(new Color(0, 0, 0, 180));
@@ -319,15 +398,15 @@ public class FarmScreen implements Screen {
         g.drawString(text, x + 6, y + 13);
     }
 
-private void drawRain(Graphics2D g, boolean isStorm) {
+    private void drawRain(Graphics2D g, boolean isStorm) {
         int frames = game.getFrames();
         g.setColor(new Color(40, 60, 100, isStorm ? 80 : 40));
         g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
-        
+
         g.setColor(new Color(190, 210, 255, 150));
-        int rainCount = isStorm ? 350 : 140; 
-        int speed = isStorm ? 18 : 9;        
-        
+        int rainCount = isStorm ? 350 : 140;
+        int speed = isStorm ? 18 : 9;
+
         for (int i = 0; i < rainCount; i++) {
             int x = (i * 53 + frames * (isStorm ? 5 : 2)) % (Ui.WIDTH + 50) - 20;
             int y = (i * 97 + frames * speed) % Ui.MAP_HEIGHT;
@@ -346,9 +425,11 @@ private void drawRain(Graphics2D g, boolean isStorm) {
     }
 
     private void drawDayStart(Graphics2D g) {
-        int alpha = Math.min(255, fadeTicks * 255 * 2 / FADE_TICKS);   // stays black for the first half
+        int alpha = Math.min(255, fadeTicks * 255 * 2 / FADE_TICKS); // stays black for the first half
         Ui.dim(g, alpha);
-        Ui.centered(g, "Day " + clock.getDay() + " of " + LAST_DAY, 40, Ui.MAP_HEIGHT / 2 - 10, new Color(255, 255, 255, alpha));
-        Ui.centered(g, clock.getWeather().getMorningText(), 18, Ui.MAP_HEIGHT / 2 + 24, new Color(255, 230, 120, alpha));
+        Ui.centered(g, "Day " + clock.getDay() + " of " + LAST_DAY, 40, Ui.MAP_HEIGHT / 2 - 10,
+                new Color(255, 255, 255, alpha));
+        Ui.centered(g, clock.getWeather().getMorningText(), 18, Ui.MAP_HEIGHT / 2 + 24,
+                new Color(255, 230, 120, alpha));
     }
 }

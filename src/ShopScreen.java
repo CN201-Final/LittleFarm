@@ -8,7 +8,7 @@ public class ShopScreen implements Screen {
 
     private final GamePanel game;
     private final FarmScreen farm;
-    private final Crop[] crops = new Crop[CropFactory.NAMES.length];   // one sample of each, to read prices from
+    private final Crop[] crops = new Crop[CropFactory.NAMES.length];   
     private int row = 0;
     private int quantity = 1;
     private String status = "";
@@ -39,7 +39,7 @@ public class ShopScreen implements Screen {
         try {
             farmer.spendGold(total);
             farmer.getSeedBag(crop.getName()).addSeeds(quantity);
-            farmer.selectSeed(row);   // you'll want to plant what you just bought
+            farmer.selectSeed(row);   
             farm.floatAtFacing("-" + total + "G", new Color(255, 140, 120));
             status = "Bought " + quantity + " " + crop.getName() + " seeds. They're ready in your hand.";
         } catch (FarmException e) {
@@ -59,9 +59,12 @@ public class ShopScreen implements Screen {
         String gold = "Your gold " + farm.getFarmer().getGold() + "G";
         g.drawString(gold, left + width - 20 - g.getFontMetrics().stringWidth(gold), top + 38);
 
+        Season currentSeason = farm.getClock().getSeason();
+
         g.setFont(Ui.font(13));
         g.setColor(Ui.WOOD);
-        g.drawString(String.format("%-11s %6s %8s %7s %8s", "Crop", "Seed", "Grows", "Sells", "Profit"), left + 30, top + 80);
+        g.drawString(String.format("%-11s %6s %8s %7s %8s   %s", "Crop", "Seed", "Grows", "Sells", "Profit", "Seasons"), left + 30, top + 80);
+        
         for (int i = 0; i < crops.length; i++) {
             Crop crop = crops[i];
             int y = top + 110 + i * 30;
@@ -69,14 +72,36 @@ public class ShopScreen implements Screen {
                 g.setColor(Ui.HIGHLIGHT);
                 g.fillRoundRect(left + 18, y - 19, width - 36, 27, 8, 8);
             }
+            
+            StringBuilder seasonsStr = new StringBuilder();
+            for (Season s : Season.values()) {
+                if (crop.canGrowIn(s)) {
+                    if (seasonsStr.length() > 0) seasonsStr.append(", ");
+                    seasonsStr.append(s.name());
+                }
+            }
+            
+            int sellPrice = crop.getSellPrice();
+            boolean inSeason = crop.canGrowIn(currentSeason);
+            if (inSeason) {
+                sellPrice = (int) (sellPrice * 1.2);
+            }
+            int profit = sellPrice - crop.getSeedPrice();
+
             g.setColor(Ui.INK);
-            g.drawString(String.format("%-11s %5dG %3d days %6dG %+7dG", crop.getName(), crop.getSeedPrice(),
-                    crop.getDaysToMature(), crop.getSellPrice(), crop.getSellPrice() - crop.getSeedPrice()), left + 30, y);
+            g.drawString(String.format("%-11s %5dG %3d days %6dG %+7dG   %s", 
+                    crop.getName(), crop.getSeedPrice(), crop.getDaysToMature(), 
+                    sellPrice, profit, seasonsStr.toString()), left + 30, y);
         }
 
         Crop chosen = crops[row];
         g.setColor(Ui.WOOD);
-        g.drawString(chosen.getName() + ": " + chosen.getNote(), left + 30, top + 220);
+        g.drawString(chosen.getName() + ": " + chosen.getNote(), left + 30, top + 215);
+        if (chosen.canGrowIn(currentSeason)) {
+            g.setColor(new Color(40, 150, 60)); 
+            g.drawString("* In season! +20% Profit *", left + 30, top + 235);
+        }
+        
         Ui.centered(g, "Quantity  < " + quantity + " >    Total " + chosen.getSeedPrice() * quantity + "G", 17, top + 268, Ui.INK);
         Ui.centered(g, status, 13, top + 305, status.startsWith("Bought") ? new Color(40, 130, 50) : Ui.WARNING);
         Ui.centered(g, "UP/DOWN crop   LEFT/RIGHT amount   ENTER buy   ESC leave", 12, top + 380, Ui.WOOD);

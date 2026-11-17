@@ -48,14 +48,12 @@ public class TvScreen implements Screen {
             g.setColor(Ui.WOOD);
             g.drawString(labels[i], colX + 15, top + 110);
 
-            // ใช้ไอคอนสภาพอากาศเดิมที่มีอยู่แล้ว
             w.drawIcon(g, colX + 35, top + 140); 
 
             g.setFont(Ui.font(14));
             g.setColor(Ui.INK);
             g.drawString(w.getLabel(), colX + 25, top + 190);
             
-            // โชว์เปอร์เซ็นต์โอกาสเกิด
             g.setColor(w.getChance() > 30 ? new Color(60, 120, 200) : Ui.WOOD);
             g.drawString("Rain: " + w.getChance() + "%", colX + 10, top + 215);
         }
