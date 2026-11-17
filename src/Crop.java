@@ -1,9 +1,22 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Set;
 
-/** Every crop grows the same way; each subclass says how fast, what it is worth, and what it looks like ripe. */
+/** Shared crop growth. Each subclass supplies its seasons, prices and produce. */
 public abstract class Crop {
+    private final Set<Season> growingSeasons;
     private int daysGrown = 0;
+
+    protected Crop(Set<Season> growingSeasons) {
+        if (growingSeasons.isEmpty()) {
+            throw new IllegalArgumentException("A crop must grow in at least one season");
+        }
+        this.growingSeasons = Set.copyOf(growingSeasons);
+    }
+
+    public boolean canGrowIn(Season season) {
+        return growingSeasons.contains(season);
+    }
 
     public abstract String getName();
     public abstract int getDaysToMature();

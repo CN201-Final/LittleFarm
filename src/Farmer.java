@@ -7,6 +7,7 @@ import java.util.List;
 /** Walks tile by tile. A tap turns on the spot; holding the key walks. */
 public class Farmer {
     public static final int MAX_ENERGY = 100;
+    private static final int HOT_TOOL_SURCHARGE = 1;
     private static final int STEP_TICKS = 8;   // ticks to slide from one tile to the next
     private static final int TURN_TICKS = 5;   // hold this long after turning before walking
 
@@ -71,10 +72,12 @@ public class Farmer {
         }
     }
 
-    public void use(Tool tool, Tile tile) throws FarmException {
-        if (energy < tool.getEnergyCost()) throw new FarmException("Too tired - go to bed in the house");
-        tool.use(tile);
-        energy -= tool.getEnergyCost();   // only reached if use() didn't throw
+    public void use(Tool tool, Tile tile, Season season) throws FarmException {
+        int cost = tool.getEnergyCost();
+        if (season == Season.HOT) cost += HOT_TOOL_SURCHARGE;
+        if (energy < cost) throw new FarmException("Too tired - go to bed in the house");
+        tool.use(tile, season);
+        energy -= cost;
     }
 
     public void spendGold(int amount) throws FarmException {

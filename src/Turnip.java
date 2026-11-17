@@ -1,7 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Set;
 
 public class Turnip extends Crop {
+    public Turnip() {
+        super(Set.of(Season.HOT, Season.COLD));
+    }
+
     @Override public String getName() { return "Turnip"; }
     @Override public int getDaysToMature() { return 3; }
     @Override public int getSeedPrice() { return 20; }

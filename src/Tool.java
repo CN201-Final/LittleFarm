@@ -9,5 +9,5 @@ public interface Tool {
     int getEnergyCost();
 
     /** Does the job, or throws to say why it can't be done (and then costs no energy). */
-    void use(Tile tile) throws FarmException;
+    void use(Tile tile, Season season) throws FarmException;
 }

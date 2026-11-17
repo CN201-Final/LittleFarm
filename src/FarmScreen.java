@@ -134,7 +134,7 @@ public class FarmScreen implements Screen {
             }
             Tool tool = farmer.toolFor(tile);
             if (tool == null) throw new FarmException(tile.hasCrop() ? "Already watered - it grows tonight" : "Nothing to do here");
-            farmer.use(tool, tile);
+            farmer.use(tool, tile, clock.getSeason());
             if (checklist != null && tool instanceof SeedBag) checklist.complete(Checklist.Step.PLANT);
             if (checklist != null && tool instanceof WateringCan) checklist.complete(Checklist.Step.WATER);
         } catch (FarmException e) {
@@ -207,7 +207,9 @@ public class FarmScreen implements Screen {
         int goldBefore = farmer.getGold();
         farmer.earn(earned);
         clock.nextDay(rng);
-        farm.newDay(clock.getWeather());
+        Weather weather = clock.getWeather();
+        int stormLosses = farm.newDay(clock.getSeason(), weather, rng);
+        if (weather == Weather.STORM) lines.add("Crops lost to the storm: " + stormLosses);
         String news = farm.getVillager().newDay(clock.getDay(), rng);
         if (news != null) lines.add(news);
         farmer.wakeUp(DOOR_COL, DOOR_ROW, passedOut);
