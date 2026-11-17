@@ -118,6 +118,9 @@ public class FarmScreen implements Screen {
                     farmer.getCan().refill();
                     say("Watering can refilled");
                     return;
+                case TV:
+                    game.setScreen(new TvScreen(game, this, clock));
+                    return;
                 default:
                     break;
             }
@@ -149,6 +152,7 @@ public class FarmScreen implements Screen {
             case SHOP:  return "Shop";
             case BIN:   return "Ship basket";
             case POND:  return "Refill can";
+            case TV:    return "Watch Forecast";
             default:    break;
         }
         if (tile.hasCrop() && tile.getCrop().isMature()) return "Harvest";

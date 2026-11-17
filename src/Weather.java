@@ -23,6 +23,7 @@ public enum Weather {
     public String getLabel() { return label; }
     public String getMorningText() { return morningText; }
     public boolean watersCrops() { return watersCrops; }
+    public int getChance() { return chance; }
 
     /** Keeps compatibility with existing calls without a season. */
     public static Weather forecast(Random rng) {
