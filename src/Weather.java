@@ -22,6 +22,7 @@ public enum Weather {
     public String getLabel() { return label; }
     public String getMorningText() { return morningText; }
     public boolean watersCrops() { return watersCrops; }
+    public int getChance() { return chance; }
 
     public static Weather forecast(Random rng) {
         int roll = rng.nextInt(100);

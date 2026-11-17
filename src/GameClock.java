@@ -11,7 +11,7 @@ public class GameClock {
     private int day = 1;
     private int minutes = DAY_START;
     private int ticks = 0;
-    private Weather weather = Weather.SUNNY;   // day 1 is always fine
+    private Weather[] forecast = {Weather.SUNNY, Weather.SUNNY, Weather.SUNNY};
 
     public void tick() {
         if (++ticks >= TICKS_PER_STEP) {
@@ -26,13 +26,16 @@ public class GameClock {
         day++;
         minutes = DAY_START;
         ticks = 0;
-        weather = Weather.forecast(rng);
+        forecast[0] = forecast[1];
+        forecast[1] = forecast[2];
+        forecast[2] = Weather.forecast(rng);
     }
 
     public int getDay() { return day; }
     public int getMinutes() { return minutes; }
-    public Weather getWeather() { return weather; }
-    public void setWeather(Weather weather) { this.weather = weather; }
+    public Weather getWeather() { return forecast[0]; }
+    public void setWeather(Weather weather) { this.forecast[0] = weather; }
+    public Weather getForecast(int dasyAhead) {return forecast[dasyAhead]; }
 
     public void setDay(int day) {
         if (day < 1) throw new IllegalArgumentException("day must be at least 1, not " + day);

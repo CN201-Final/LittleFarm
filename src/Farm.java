@@ -14,7 +14,7 @@ public class Farm {
         "#HHHH.........SSSS.#",
         "#HHHH.........SSSS.#",
         "#HHHH.........SSSS.#",
-        "#..................#",
+        "#................T.#",
         "#..................#",
         "#...,,,,,..V.......#",
         "#...,,,,,..........#",
@@ -131,6 +131,13 @@ public class Farm {
                     g.fillRect(x, y + 19, TILE, 3);
                     g.fillRect(x + 12, y + 6, 8, 20);
                 }
+                break;
+            case TV:
+                drawGrass(g, x, y, seed); // พื้นหลังใต้ทีวี
+                g.setColor(new Color(40, 40, 40)); 
+                g.fillRoundRect(x + 4, y + 8, 24, 20, 4, 4); // กรอบทีวี
+                g.setColor(new Color(100, 150, 255));
+                g.fillRect(x + 6, y + 10, 20, 16); // หน้าจอทีวี
                 break;
             default:   // grass, and the ground under buildings
                 drawGrass(g, x, y, seed);
