@@ -29,10 +29,13 @@ public class TvScreen implements Screen {
         int left = (Ui.WIDTH - width) / 2, top = 100;
         
         Ui.paper(g, left, top, width, height);
-        Ui.centered(g, "GNN WEATHER FORECAST", 26, top + 45, Ui.INK);
+        Ui.centered(g, "WEATHER FORECAST", 26, top + 45, Ui.INK);
 
+        String seasonName = clock.getSeason().name();
+        Ui.centered(g, "SEASON: " + seasonName, 16, top + 75, new Color(40, 130, 50));
+        
         g.setColor(new Color(200, 180, 150));
-        g.drawLine(left + 40, top + 70, left + width - 40, top + 70);
+        g.drawLine(left + 40, top + 95, left + width - 40, top + 95);
 
         String[] labels = {"TODAY", "TOMORROW", "DAY AFTER"};
         int[] xOffsets = {60, 200, 340};
@@ -54,7 +57,7 @@ public class TvScreen implements Screen {
             
             // โชว์เปอร์เซ็นต์โอกาสเกิด
             g.setColor(w.getChance() > 30 ? new Color(60, 120, 200) : Ui.WOOD);
-            g.drawString("Chance: " + w.getChance() + "%", colX + 10, top + 215);
+            g.drawString("Rain: " + w.getChance() + "%", colX + 10, top + 215);
         }
 
         Ui.centered(g, "press ESC or SPACE to turn off", 12, top + height - 20, new Color(150, 140, 120));
