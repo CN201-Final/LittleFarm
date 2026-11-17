@@ -1,8 +1,14 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-/** Days run from 06:00 to midnight; the clock moves on ten minutes every two real seconds. */
+/**
+ * Days run from 06:00 to midnight; the clock moves on ten minutes every two
+ * real seconds.
+ */
 public class GameClock {
-    private static final int DAY_START = 6 * 60;    // in minutes after midnight
+    private static final int DAY_START = 6 * 60; // in minutes after midnight
     private static final int DAY_END = 24 * 60;
     private static final int DUSK = 18 * 60;
     private static final int TICKS_PER_STEP = 120;
@@ -11,7 +17,7 @@ public class GameClock {
     private int day = 1;
     private int minutes = DAY_START;
     private int ticks = 0;
-    private Weather weather = Weather.SUNNY;   // day 1 is always fine
+    private Weather[] forecast = { Weather.SUNNY, Weather.SUNNY, Weather.SUNNY };
 
     public void tick() {
         if (++ticks >= TICKS_PER_STEP) {
@@ -20,29 +26,54 @@ public class GameClock {
         }
     }
 
-    public boolean isMidnight() { return minutes >= DAY_END; }
+    public boolean isMidnight() {
+        return minutes >= DAY_END;
+    }
 
     public void nextDay(Random rng) {
         day++;
         minutes = DAY_START;
         ticks = 0;
-        weather = Weather.forecast(rng, getSeason());
+        forecast[0] = forecast[1];
+        forecast[1] = forecast[2];
+        forecast[2] = Weather.forecast(rng, getSeason());
     }
 
-    public int getDay() { return day; }
-    public Season getSeason() { return Season.fromDay(day); }
-    public int getMinutes() { return minutes; }
-    public Weather getWeather() { return weather; }
-    public void setWeather(Weather weather) { this.weather = weather; }
+    public int getDay() {
+        return day;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public Weather getWeather() {
+        return forecast[0];
+    }
+
+    public void setWeather(Weather weather) {
+        this.forecast[0] = weather;
+    }
+
+    public Weather getForecast(int dasyAhead) {
+        return forecast[dasyAhead];
+    }
 
     public void setDay(int day) {
-        if (day < 1) throw new IllegalArgumentException("day must be at least 1, not " + day);
+        if (day < 1)
+            throw new IllegalArgumentException("day must be at least 1, not " + day);
         this.day = day;
+    }
+
+    public Season getSeason() {
+        int idx = ((day - 1) / 10) % 3;
+        return Season.values()[idx];
     }
 
     /** How dark the evening is: 0 until 18:00, rising to 160 by 22:00. */
     public int darkness() {
-        if (minutes < DUSK) return 0;
+        if (minutes < DUSK)
+            return 0;
         return Math.min(160, (minutes - DUSK) * 160 / (4 * 60));
     }
 

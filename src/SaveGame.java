@@ -10,6 +10,7 @@ import java.util.Map;
  * Saves the farm as plain text you can open and read, e.g.
  *   day 4
  *   weather RAINY
+ *   season HOT
  *   gold 380
  *   seeds Turnip 2
  *   request Turnip 3 360 4     (crop amount reward daysLeft)

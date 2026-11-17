@@ -29,6 +29,7 @@ public class FarmScreen implements Screen {
     private int fadeTicks, messageTicks;
     private boolean warnedLate;
     private String message = "";
+    private int lightningTicks = 0;
 
     private FarmScreen(GamePanel game) {
         this.game = game;
@@ -118,6 +119,9 @@ public class FarmScreen implements Screen {
                     farmer.getCan().refill();
                     say("Watering can refilled");
                     return;
+                case TV:
+                    game.setScreen(new TvScreen(game, this, clock));
+                    return;
                 default:
                     break;
             }
@@ -149,6 +153,7 @@ public class FarmScreen implements Screen {
             case SHOP:  return "Shop";
             case BIN:   return "Ship basket";
             case POND:  return "Refill can";
+            case TV:    return "Watch Forecast";
             default:    break;
         }
         if (tile.hasCrop() && tile.getCrop().isMature()) return "Harvest";
@@ -243,6 +248,9 @@ public class FarmScreen implements Screen {
             say("It's getting late - go to bed before midnight!");
         }
         farmer.update(farm, heldDirection());
+        if (clock.getWeather() == Weather.STORM && rng.nextInt(500) == 0){
+            lightningTicks = 10;
+        }
     }
 
     private Direction heldDirection() {
@@ -262,7 +270,18 @@ public class FarmScreen implements Screen {
         g.setColor(new Color(255, 255, 255, 110));   // the tile SPACE will act on
         g.drawRect(col * Farm.TILE, row * Farm.TILE, Farm.TILE - 1, Farm.TILE - 1);
         drawPeople(g);
-        if (clock.getWeather() == Weather.RAINY) drawRain(g);
+        if (clock.getSeason() == Season.COLD) {
+            g.setColor(new Color(100, 150, 255, 35)); 
+            g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
+        }
+        if (clock.getWeather() == Weather.RAINY || clock.getWeather() == Weather.STORM) {
+            drawRain(g, clock.getWeather() == Weather.STORM);
+        }
+        if (lightningTicks > 0) {
+            g.setColor(new Color(255, 255, 255, lightningTicks * 21)); 
+            g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
+            lightningTicks--;
+        }
         g.setColor(new Color(15, 15, 50, clock.darkness()));
         g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
         for (FloatingText text : floatingTexts) text.draw(g);
@@ -300,15 +319,19 @@ public class FarmScreen implements Screen {
         g.drawString(text, x + 6, y + 13);
     }
 
-    private void drawRain(Graphics2D g) {
+private void drawRain(Graphics2D g, boolean isStorm) {
         int frames = game.getFrames();
-        g.setColor(new Color(40, 60, 100, 50));
+        g.setColor(new Color(40, 60, 100, isStorm ? 80 : 40));
         g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
+        
         g.setColor(new Color(190, 210, 255, 150));
-        for (int i = 0; i < 140; i++) {   // scattered by index, falling with time: no per-drop state needed
-            int x = (i * 53 + frames * 2) % (Ui.WIDTH + 20) - 10;
-            int y = (i * 97 + frames * 9) % Ui.MAP_HEIGHT;
-            g.drawLine(x, y, x - 3, y + 10);
+        int rainCount = isStorm ? 350 : 140; 
+        int speed = isStorm ? 18 : 9;        
+        
+        for (int i = 0; i < rainCount; i++) {
+            int x = (i * 53 + frames * (isStorm ? 5 : 2)) % (Ui.WIDTH + 50) - 20;
+            int y = (i * 97 + frames * speed) % Ui.MAP_HEIGHT;
+            g.drawLine(x, y, x - (isStorm ? 6 : 3), y + (isStorm ? 15 : 10));
         }
     }
 
