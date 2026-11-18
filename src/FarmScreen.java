@@ -49,6 +49,9 @@ public class FarmScreen implements Screen {
         FarmScreen screen = new FarmScreen(game);
         try {
             game.getSaveGame().loadInto(screen.farm, screen.farmer, screen.clock);
+            if (game.getStartingSeason() != null) {
+                screen.clock.setStartingSeason(game.getStartingSeason());
+            }
             screen.say("Welcome back!");
         } catch (IOException e) {
             screen = newGame(game);
@@ -348,7 +351,7 @@ public class FarmScreen implements Screen {
         g.setColor(new Color(255, 255, 255, 110)); // the tile SPACE will act on
         g.drawRect(col * Farm.TILE, row * Farm.TILE, Farm.TILE - 1, Farm.TILE - 1);
         drawPeople(g);
-        if (clock.getSeason() == Season.COLD) {
+        if (Season.COLD.equals(clock.getSeason())) {
             g.setColor(new Color(100, 150, 255, 35));
             g.fillRect(0, 0, Ui.WIDTH, Ui.MAP_HEIGHT);
         }
