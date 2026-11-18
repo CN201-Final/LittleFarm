@@ -3,8 +3,7 @@ import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
-        String startingWord = (args.length > 0) ? args[0] : "hot";
-        Season startingSeason = SeasonFactory.create(startingWord);
+        Season startingSeason = (args.length > 0) ? SeasonFactory.create(args[0]) : null;
         // Swing is single-threaded: build the window on its event thread
         SwingUtilities.invokeLater(() -> {
             GamePanel panel = new GamePanel(startingSeason);
