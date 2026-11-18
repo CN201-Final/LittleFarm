@@ -2,7 +2,7 @@ import java.util.Random;
 
 /** One square of the farm. It guards its own rules: you cannot plant on grass or water a fence. */
 public class Tile {
-    private static final int STORM_DAMAGE_PERCENT = 20;
+    private static final int STORM_DAMAGE_PERCENT = 10;
 
     private TileType type;
     private boolean watered;
