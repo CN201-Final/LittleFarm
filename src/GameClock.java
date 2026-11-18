@@ -14,7 +14,7 @@ public class GameClock {
     private int day = 1;
     private int minutes = DAY_START;
     private int ticks = 0;
-    private int seasonOffset = 0;
+    private Season currentSeason = Season.VALUES[0];
     private Weather[] forecast = { Weather.SUNNY, Weather.SUNNY, Weather.SUNNY };
 
     public void tick() {
@@ -32,6 +32,16 @@ public class GameClock {
         day++;
         minutes = DAY_START;
         ticks = 0;
+
+        if ((day - 1) % 10 == 0) {
+            for (int i = 0; i < Season.VALUES.length; i++) {
+                if (Season.VALUES[i].getName().equals(currentSeason.getName())) {
+                    currentSeason = Season.VALUES[(i + 1) % Season.VALUES.length];
+                    break;
+                }
+            }
+        }
+
         forecast[0] = forecast[1];
         forecast[1] = forecast[2];
         forecast[2] = getSeason().forecastWeather(rng);
@@ -64,8 +74,7 @@ public class GameClock {
     }
 
     public Season getSeason() {
-        int idx = (((day - 1) / 10) + seasonOffset) % 3;
-        return Season.VALUES[idx];
+        return currentSeason;
     }
 
     /** How dark the evening is: 0 until 18:00, rising to 160 by 22:00. */
@@ -81,11 +90,6 @@ public class GameClock {
 
     public void setStartingSeason(Season startingSeason) {
         if (startingSeason == null) return;
-        for (int i = 0; i < Season.VALUES.length; i++) {
-            if (Season.VALUES[i].getName().equals(startingSeason.getName())) {
-                this.seasonOffset = i;
-                break;
-            }
-        }
+        this.currentSeason = startingSeason;
     }
 }
