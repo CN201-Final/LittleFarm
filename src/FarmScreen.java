@@ -161,6 +161,12 @@ public class FarmScreen implements Screen {
                 checklist.complete(Checklist.Step.PLANT);
             if (checklist != null && tool instanceof WateringCan)
                 checklist.complete(Checklist.Step.WATER);
+        } catch (WrongSeasonException e) {
+            say("Season Alert: " + e.getMessage());
+            floatAtFacing("Wrong Season!", Ui.WARNING);
+        } catch (ExhaustedFarmerException e) {
+            say(e.getMessage());
+            floatAtFacing("Need Sleep", Ui.WARNING);
         } catch (FarmException e) {
             say(e.getMessage());
         }
@@ -218,7 +224,7 @@ public class FarmScreen implements Screen {
             Crop crop = CropFactory.create(entry.getKey());
             int price = crop.getSellPrice();
             if (crop.canGrowIn(currentSeason)) {
-                price = (int) (price * 1.2); 
+                price = (int) (price * 1.2);
             }
             value += price * entry.getValue();
             shippedToday.add(entry.getKey(), entry.getValue());
@@ -252,7 +258,7 @@ public class FarmScreen implements Screen {
             Crop crop = CropFactory.create(entry.getKey());
             int price = crop.getSellPrice();
             if (crop.canGrowIn(currentSeason)) {
-                price = (int) (price * 1.2); 
+                price = (int) (price * 1.2);
             }
             int value = price * entry.getValue();
 
