@@ -80,8 +80,9 @@ public class GameClock {
     }
 
     public void setStartingSeason(Season startingSeason) {
+        if (startingSeason == null) return;
         for (int i = 0; i < Season.VALUES.length; i++) {
-            if (Season.VALUES[i] == startingSeason) {
+            if (Season.VALUES[i].getName().equals(startingSeason.getName())) {
                 this.seasonOffset = i;
                 break;
             }
