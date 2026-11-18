@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 public enum Weather {
     SUNNY("Sunny", "A fine sunny day", 15, false),
     RAINY("Rainy", "Rain today - no need to water", 85, true),
-    STORM("Storm", "STORM WARNING: Heavy rain and wind!", 100, true);
+    STORM("Storm", "STORM WARNING: Heavy rain and wind!", 40, true);
 
     private final String label;
     private final String morningText;
