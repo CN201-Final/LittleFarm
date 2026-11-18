@@ -22,10 +22,12 @@ public class GamePanel extends JPanel implements ActionListener {
     private final Timer timer = new Timer(16, this);
     private final Set<Integer> keysDown = new HashSet<>();
     private final SaveGame saveGame = new SaveGame("littlefarm_save.txt");
+    private final Season startingSeason;
     private Screen screen;
     private int frames;
 
-    public GamePanel() {
+    public GamePanel(Season staringSeason) {
+        this.startingSeason = staringSeason;
         setPreferredSize(new Dimension((int) (Ui.WIDTH * START_SCALE), (int) (Ui.HEIGHT * START_SCALE)));
         setBackground(Color.BLACK);   // the bars beside the game when the window's shape doesn't match
         setFocusable(true);
@@ -41,6 +43,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void start() {
         timer.start();
+    }
+
+    public Season getStartingSeason() {
+        return startingSeason;
     }
 
     void pressKey(int code) {

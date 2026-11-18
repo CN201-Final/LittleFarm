@@ -14,6 +14,7 @@ public class GameClock {
     private int day = 1;
     private int minutes = DAY_START;
     private int ticks = 0;
+    private int seasonOffset = 0;
     private Weather[] forecast = { Weather.SUNNY, Weather.SUNNY, Weather.SUNNY };
 
     public void tick() {
@@ -63,7 +64,7 @@ public class GameClock {
     }
 
     public Season getSeason() {
-        int idx = ((day - 1) / 10) % 3;
+        int idx = (((day - 1) / 10) + seasonOffset) % 3;
         return Season.VALUES[idx];
     }
 
@@ -76,5 +77,14 @@ public class GameClock {
 
     public String timeText() {
         return String.format("%02d:%02d", minutes / 60, minutes % 60);
+    }
+
+    public void setStartingSeason(Season startingSeason) {
+        for (int i = 0; i < Season.VALUES.length; i++) {
+            if (Season.VALUES[i] == startingSeason) {
+                this.seasonOffset = i;
+                break;
+            }
+        }
     }
 }

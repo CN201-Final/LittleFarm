@@ -33,6 +33,7 @@ public class FarmScreen implements Screen {
 
     private FarmScreen(GamePanel game) {
         this.game = game;
+        clock.setStartingSeason(game.getStartingSeason());
         farmer.getSeedBag("Turnip").addSeeds(STARTING_SEEDS);
     }
 
