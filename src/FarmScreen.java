@@ -93,6 +93,14 @@ public class FarmScreen implements Screen {
         floatingTexts.add(new FloatingText(text, col * Farm.TILE + Farm.TILE / 2.0, row * Farm.TILE, color));
     }
 
+    private int calculatePrice(Crop crop, Season season) {
+        int price = crop.getSellPrice();
+        if (crop.canGrowIn(season)) {
+            return (int) Math.round(price * 1.2);
+        }
+        return price;
+    }
+
     // ---- keys -----------------------------------------------------------------
 
     @Override
@@ -222,10 +230,7 @@ public class FarmScreen implements Screen {
 
         for (Map.Entry<String, Integer> entry : basket.asMap().entrySet()) {
             Crop crop = CropFactory.create(entry.getKey());
-            int price = crop.getSellPrice();
-            if (crop.canGrowIn(currentSeason)) {
-                price = (int) (price * 1.2);
-            }
+            int price = calculatePrice(crop, currentSeason);
             value += price * entry.getValue();
             shippedToday.add(entry.getKey(), entry.getValue());
         }
@@ -256,10 +261,7 @@ public class FarmScreen implements Screen {
 
         for (Map.Entry<String, Integer> entry : shippedToday.asMap().entrySet()) {
             Crop crop = CropFactory.create(entry.getKey());
-            int price = crop.getSellPrice();
-            if (crop.canGrowIn(currentSeason)) {
-                price = (int) (price * 1.2);
-            }
+            int price = calculatePrice(crop, currentSeason);
             int value = price * entry.getValue();
 
             lines.add(String.format("Shipped %-10s x%-3d %6dG", entry.getKey(), entry.getValue(), value));
