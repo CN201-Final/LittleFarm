@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Random;
 
 /** Each kind of weather carries its own odds and effects, so adding a STORM means adding one constant. */
 public enum Weather {
