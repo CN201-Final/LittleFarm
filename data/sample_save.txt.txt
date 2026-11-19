@@ -1,0 +1,23 @@
+little-farm save 1
+day 9
+weather SUNNY
+season HOT
+gold 502
+earned 552
+can 10
+seeds Turnip 0
+seeds Potato 0
+seeds Strawberry 0
+basket Potato 2
+villager 1 1
+request Turnip 2 240 2
+soil 4 6 Potato 4 dry
+soil 5 6 Potato 4 dry
+soil 6 6 Potato 4 dry
+soil 7 6 Potato 4 dry
+soil 8 6 Potato 4 dry
+soil 4 7 - 0 dry
+soil 5 7 - 0 dry
+soil 6 7 - 0 dry
+soil 7 7 - 0 dry
+soil 8 7 - 0 dry
